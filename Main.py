@@ -1,9 +1,7 @@
 from MLPv1 import *
 
 g = Graph()
-g.createInputLayer()
-g.createOutputLayer()
-g.createHiddenLayer()
-g.createInputNode()
-g.createOutputNode()
-print(g.createHiddenNode())
+g.createMultipleInputNodes(2)
+g.createMultipleHiddenNodes(4)
+g.createMultipleOutputNodes(1)
+

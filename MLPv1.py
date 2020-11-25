@@ -54,20 +54,17 @@ class OutputLayer(Layer):
 class HiddenLayer(Layer):
     pass
 
+class Types(Enum):
+    INPUT = "INPUT"
+    OUTPUT = "OUTPUT"
+    HIDDEN = "HIDDEN"
+
 class Graph:
     def __init__(self):
-        self.inputLayer = None
-        self.outputLayer = None
+        self.inputLayer = InputLayer()
+        self.outputLayer = OutputLayer()
         self.hiddenLayerList = []
         self.nodeList = []
-    
-    def createInputLayer(self):
-        layer = InputLayer()
-        self.inputLayer = layer
-    
-    def createOutputLayer(self):
-        layer = OutputLayer()
-        self.outputLayer = layer
     
     def createHiddenLayer(self):
         layer = HiddenLayer()        
@@ -75,6 +72,7 @@ class Graph:
     
     def createInputNode(self):
         node = InputNode()
+        self.inputLayer.addNode(node)
         self.nodeList.append(node)
         return node
     
@@ -87,3 +85,15 @@ class Graph:
         node = HiddenNode()
         self.nodeList.append(node)
         return node
+
+    def createMultipleInputNodes(self, count : int):        
+        for i in range(count):
+            self.createInputNode()            
+
+    def createMultipleOutputNodes(self, count : int):        
+        for i in range(count):
+            self.createOutputNode()            
+
+    def createMultipleHiddenNodes(self, count : int):        
+        for i in range(count):
+            self.createHiddenNode()
