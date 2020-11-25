@@ -10,10 +10,10 @@ class Node:
         self.inEdgeList = []
         self.outEdgeList = []
     
-    def addInEdge(edge):
+    def addInEdge(self, edge):
         self.inEdgeList.append(edge)
     
-    def addOutEdge(edge):
+    def addOutEdge(self, edge):
         self.outEdgeList.append(edge)
     
 
@@ -40,9 +40,9 @@ class Layer:
     def __init__(self):
         self.nodes = []
     
-    def addNode(node):
+    def addNode(self, node):
         self.nodes.append(node)
-    def removeNode(node):
+    def removeNode(self, node):
         self.nodes.remove(node)
 
 class InputLayer(Layer):
@@ -53,12 +53,6 @@ class OutputLayer(Layer):
 
 class HiddenLayer(Layer):
     pass
-
-
-class NodeEnum(Enum):
-    INPUT = "INPUT"
-    OUTPUT = "OUTPUT"
-    HIDDEN = "HIDDEN"
 
 class Graph:
     def __init__(self):
