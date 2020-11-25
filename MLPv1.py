@@ -9,6 +9,7 @@ class Node:
     def __init__(self):
         self.inEdgeList = []
         self.outEdgeList = []
+        self.value = None
     
     def addInEdge(self, edge):
         self.inEdgeList.append(edge)
@@ -21,13 +22,12 @@ class InputNode(Node):
     pass
 
 class OutputNode(Node):
-    def __init__(self):
-        self.value = None
+    pass
+        
 
 
 class HiddenNode(Node):
-    def __init__(self):
-        self.value = None
+    pass
 
 
 class Edge:
@@ -95,5 +95,7 @@ class Graph:
     def createMultipleHiddenNodes(self, hiddenLayer : HiddenLayer, count : int):        
         for i in range(count):
             self.createHiddenNode(hiddenLayer)
+
+    
 
     
