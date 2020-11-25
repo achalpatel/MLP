@@ -16,7 +16,14 @@ class Node:
     
     def addOutEdge(self, edge):
         self.outEdgeList.append(edge)
-    
+
+    def printData(self):
+        print("value : ",self.value)
+        for edge in self.inEdgeList:
+            print("In - edge : ",edge)
+        for edge in self.outEdgeList:
+            print("Out - edge : ",edge)
+        
 
 class InputNode(Node):
     pass
@@ -35,6 +42,11 @@ class Edge:
         self.fromNode = fromNode
         self.toNode = toNode
         self.weight = None
+    
+    def printData(self):
+        print("From Node : ", self.fromNode)
+        print("To Node : ", self.toNode)
+        print("Weight : ", self.weight)
 
 class Layer:
     def __init__(self):
@@ -100,8 +112,14 @@ class Graph:
         for fromNode in self.inputLayer.nodes:
             for toNode in self.hiddenLayerList[0].nodes:
                 edge = Edge(fromNode, toNode)
-                
+                fromNode.addOutEdge(edge)
+                toNode.addInEdge(edge)
+
 
     def connectHiddenToOutput(self):
-        pass
+        for fromNode in self.hiddenLayerList[0].nodes:
+            for toNode in self.outputLayer.nodes:
+                edge = Edge(fromNode, toNode)
+                fromNode.addOutEdge(edge)
+                toNode.addInEdge(edge)
     
