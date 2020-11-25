@@ -1,16 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
 import numpy as np
 import pandas as pd
 from enum import Enum
-
-
-# In[2]:
-
 
 class Node:
     def __init__(self):
@@ -24,23 +17,12 @@ class Node:
         self.outEdgeList.append(edge)
     
 
-
-# In[3]:
-
-
 class InputNode(Node):
     pass
-
-
-# In[4]:
-
 
 class OutputNode(Node):
     def __init__(self):
         self.value = None
-
-
-# In[5]:
 
 
 class HiddenNode(Node):
@@ -48,18 +30,11 @@ class HiddenNode(Node):
         self.value = None
 
 
-# In[6]:
-
-
 class Edge:
     def __init__(self, fromNode, toNode):
         self.fromNode = fromNode
         self.toNode = toNode
         self.weight = None
-
-
-# In[7]:
-
 
 class Layer:
     def __init__(self):
@@ -70,39 +45,20 @@ class Layer:
     def removeNode(node):
         self.nodes.remove(node)
 
-
-# In[8]:
-
-
 class InputLayer(Layer):
     pass
-
-
-# In[9]:
-
 
 class OutputLayer(Layer):
     pass
 
-
-# In[10]:
-
-
 class HiddenLayer(Layer):
     pass
-
-
-# In[11]:
 
 
 class NodeEnum(Enum):
     INPUT = "INPUT"
     OUTPUT = "OUTPUT"
     HIDDEN = "HIDDEN"
-
-
-# In[16]:
-
 
 class Graph:
     def __init__(self):
@@ -137,24 +93,3 @@ class Graph:
         node = HiddenNode()
         self.nodeList.append(node)
         return node
-    
-    
-
-
-# In[17]:
-
-
-g = Graph()
-g.createInputLayer()
-g.createOutputLayer()
-g.createHiddenLayer()
-g.createInputNode()
-g.createOutputNode()
-g.createHiddenNode()
-
-
-# In[ ]:
-
-
-
-
