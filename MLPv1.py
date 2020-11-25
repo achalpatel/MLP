@@ -96,6 +96,12 @@ class Graph:
         for i in range(count):
             self.createHiddenNode(hiddenLayer)
 
-    
+    def connectInputToHidden(self):
+        for fromNode in self.inputLayer.nodes:
+            for toNode in self.hiddenLayerList[0].nodes:
+                edge = Edge(fromNode, toNode)
+                
 
+    def connectHiddenToOutput(self):
+        pass
     
