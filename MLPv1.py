@@ -3,7 +3,7 @@
 
 import numpy as np
 import pandas as pd
-from enum import Enum
+
 
 class Node:
     def __init__(self):

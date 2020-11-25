@@ -1,4 +1,7 @@
 from MLPv1 import *
+import numpy as np
+import pandas as pd
+from io import StringIO 
 
 g = Graph()
 g.createHiddenLayer()
@@ -18,3 +21,9 @@ for node in g.nodeList:
     print(node)
     node.printData()
 
+
+def read_file(filepath):
+    with open(filepath) as fp:
+       line = fp.readline().strip()
+       
+       StringData = StringIO(line)
