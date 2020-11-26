@@ -24,6 +24,8 @@ for node in g.nodeList:
 
 def read_file(filepath):
     with open(filepath) as fp:
-       line = fp.readline().strip()
-       
-       StringData = StringIO(line)
+        for line in fp:
+            print(line.strip())                   
+    #    StringData = StringIO(line)
+
+read_file("dataset.txt")
