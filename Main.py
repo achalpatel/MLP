@@ -32,9 +32,11 @@ def read_file(filepath) -> list:
             rowLine['id'] = dataList[0]
             rowLine['attributes'] = dataList[1:-1]
             rowLine['label'] = dataList[-1]
-            print(rowLine)
+            # print(rowLine)
             dataset.append(rowLine)
     return dataset
 
 dataset = read_file("dataset.txt")
+g.calculateInitialWeights()
+g.printEdgeData()
 # print(dataset)

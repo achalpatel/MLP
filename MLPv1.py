@@ -3,6 +3,7 @@
 
 import numpy as np
 import pandas as pd
+from random import *
 
 
 class Node:
@@ -68,6 +69,7 @@ class Graph:
         self.outputLayer = OutputLayer()
         self.hiddenLayerList = []
         self.nodeList = []
+        self.edgeList = []
     
     def createHiddenLayer(self):
         layer = HiddenLayer()        
@@ -107,6 +109,7 @@ class Graph:
         for fromNode in self.inputLayer.nodes:
             for toNode in self.hiddenLayerList[0].nodes:
                 edge = Edge(fromNode, toNode)
+                self.edgeList.append(edge)
                 fromNode.addOutEdge(edge)
                 toNode.addInEdge(edge)
 
@@ -114,6 +117,14 @@ class Graph:
         for fromNode in self.hiddenLayerList[0].nodes:
             for toNode in self.outputLayer.nodes:
                 edge = Edge(fromNode, toNode)
+                self.edgeList.append(edge)
                 fromNode.addOutEdge(edge)
                 toNode.addInEdge(edge)
+            
+    def calculateInitialWeights(self):
+        for edge in self.edgeList:
+            edge.weight = random()
     
+    def printEdgeData(self):
+        for edge in self.edgeList:
+            edge.printData()
