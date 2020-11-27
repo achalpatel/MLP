@@ -24,18 +24,14 @@ class Node:
         for edge in self.outEdgeList:
             print("Out - edge : ",edge)
         
-
 class InputNode(Node):
     pass
 
 class OutputNode(Node):
     pass
-        
-
 
 class HiddenNode(Node):
     pass
-
 
 class Edge:
     def __init__(self, fromNode, toNode):
@@ -65,7 +61,6 @@ class OutputLayer(Layer):
 
 class HiddenLayer(Layer):
     pass
-
 
 class Graph:
     def __init__(self):

@@ -1,7 +1,7 @@
 from MLPv1 import *
 import numpy as np
 import pandas as pd
-from io import StringIO 
+import re
 
 g = Graph()
 g.createHiddenLayer()
@@ -22,10 +22,17 @@ for node in g.nodeList:
     node.printData()
 
 
-def read_file(filepath):
+def read_file(filepath):    
     with open(filepath) as fp:
-        for line in fp:
-            print(line.strip())                   
-    #    StringData = StringIO(line)
+        for line in fp:                  
+            rowLine = {}
+            compiler = re.compile("\d+")
+            dataList = compiler.findall(line)               
+            rowId = dataList[0]
+            attributes = dataList[1:-2]
+            label = dataList[-1]
+            rowLine[rowId] = [attributes, label]
+            print(rowLine)
+          
 
-# read_file("dataset.txt")
+read_file("dataset.txt")
