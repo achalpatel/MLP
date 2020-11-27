@@ -20,10 +20,10 @@ class Node:
 
     def printData(self):
         print("value : ",self.value)
-        for edge in self.inEdgeList:
-            print("In - edge : ",edge)
-        for edge in self.outEdgeList:
-            print("Out - edge : ",edge)
+        # for edge in self.inEdgeList:
+            # print("In - edge : ",edge)
+        # for edge in self.outEdgeList:
+            # print("Out - edge : ",edge)
         
 class InputNode(Node):
     pass
@@ -62,6 +62,11 @@ class OutputLayer(Layer):
 
 class HiddenLayer(Layer):
     pass
+
+class Utility:
+    def logistic(self, weights:list, values:list) -> float:
+        sumValue = 0
+        
 
 class Graph:
     def __init__(self):
@@ -128,3 +133,12 @@ class Graph:
     def printEdgeData(self):
         for edge in self.edgeList:
             edge.printData()
+
+    def inputLayerFeed(self, values:list):
+        for i in range(len(values)):
+            self.inputLayer.nodes[i].value = values[i]
+
+    def singlePass(self, rowLine: dict):
+        attributes = rowLine['attributes']
+        self.inputLayerFeed(attributes)
+        
