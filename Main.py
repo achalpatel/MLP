@@ -22,17 +22,19 @@ for node in g.nodeList:
     node.printData()
 
 
-def read_file(filepath):    
+def read_file(filepath) -> list:
+    dataset = []        
     with open(filepath) as fp:
-        for line in fp:                  
+        for line in fp:                              
             rowLine = {}
             compiler = re.compile("\d+")
-            dataList = compiler.findall(line)               
-            rowId = dataList[0]
-            attributes = dataList[1:-2]
-            label = dataList[-1]
-            rowLine[rowId] = [attributes, label]
+            dataList = compiler.findall(line)            
+            rowLine['id'] = dataList[0]
+            rowLine['attributes'] = dataList[1:-1]
+            rowLine['label'] = dataList[-1]
             print(rowLine)
-          
+            dataset.append(rowLine)
+    return dataset
 
-read_file("dataset.txt")
+dataset = read_file("dataset.txt")
+# print(dataset)
