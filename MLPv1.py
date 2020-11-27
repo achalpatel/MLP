@@ -115,7 +115,6 @@ class Graph:
                 fromNode.addOutEdge(edge)
                 toNode.addInEdge(edge)
 
-
     def connectHiddenToOutput(self):
         for fromNode in self.hiddenLayerList[0].nodes:
             for toNode in self.outputLayer.nodes:

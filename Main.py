@@ -28,4 +28,4 @@ def read_file(filepath):
             print(line.strip())                   
     #    StringData = StringIO(line)
 
-read_file("dataset.txt")
+# read_file("dataset.txt")
