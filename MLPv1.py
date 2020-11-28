@@ -3,7 +3,7 @@
 
 import numpy as np
 import pandas as pd
-from random import *
+import random
 import math
 
 from pandas.core.frame import DataFrame
@@ -70,11 +70,8 @@ class Utility:
     def logistic(node: Node) -> float:
         sumValue = 0.0
         for edge in node.inEdgeList:            
-            # print("edge.fromNode.value:",edge.fromNode.value)
             sumValue += edge.weight * edge.fromNode.value
-
         ans = 1/ (1 + math.exp(-sumValue))
-        print("ans:",ans)
         return ans
 
         
@@ -142,7 +139,7 @@ class Graph:
             
     def calculateInitialWeights(self):
         for edge in self.edgeList:
-            edge.weight = random()
+            edge.weight = random.uniform(0, 1/10)
     
     def printEdgeData(self):
         for edge in self.edgeList:
@@ -160,7 +157,6 @@ class Graph:
         for node in self.inputLayer.nodes:
             normalized = float((row[i]-self.minAttribList[i])/(self.maxAttribList[i] - self.minAttribList[i]))
             node.value = normalized
-            print("normalized:",normalized)
             i+=1            
 
 
@@ -169,5 +165,8 @@ class Graph:
         for layer in self.hiddenLayerList:
             for node in layer.nodes:
                 node.value = Utility.logistic(node)
-                # print(node.printData())
+        
+        for node in self.outputLayer.nodes:
+            node.value = Utility.logistic(node)
+        
         
