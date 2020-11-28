@@ -70,8 +70,11 @@ class Utility:
     def logistic(node: Node) -> float:
         sumValue = 0.0
         for edge in node.inEdgeList:            
-            sumValue += edge.weight * edge.fromNode.value                
+            # print("edge.fromNode.value:",edge.fromNode.value)
+            sumValue += edge.weight * edge.fromNode.value
+
         ans = 1/ (1 + math.exp(-sumValue))
+        print("ans:",ans)
         return ans
 
         
@@ -147,28 +150,24 @@ class Graph:
 
     def readDf(self, dataframe : DataFrame):
         self.df = dataframe
-        print("shape:" ,self.df.shape)
+        # Read Max, Min value of Each column and store in a List                
         for i in range(self.df.shape[1]-1):
             self.maxAttribList.append(pd.DataFrame.max(self.df.iloc[:,[i]]))
             self.minAttribList.append(pd.DataFrame.min(self.df.iloc[:,[i]]))
-            print("i:",i, np.max(self.df[i]), np.min(self.df[i]))
 
     def inputLayerFeed(self, row : DataFrame):        
         i = 0
         for node in self.inputLayer.nodes:
-            node.value = row[i]
+            normalized = float((row[i]-self.minAttribList[i])/(self.maxAttribList[i] - self.minAttribList[i]))
+            node.value = normalized
+            print("normalized:",normalized)
             i+=1            
 
-        # for i in range(len(values)):
-        #     self.inputLayer.nodes[i].value = values[i]
 
     def singlePass(self):
-        # print(self.df)
         self.inputLayerFeed(self.df.iloc[0])
-
-        # self.inputLayerFeed(attributes)
-        # for layer in self.hiddenLayerList:
-        #     for node in layer.nodes:
-        #         node.value = Utility.logistic(node)
-        #         print(node.printData())
+        for layer in self.hiddenLayerList:
+            for node in layer.nodes:
+                node.value = Utility.logistic(node)
+                # print(node.printData())
         
