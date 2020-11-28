@@ -35,6 +35,10 @@ g.connectHiddenToOutput()
 g.calculateInitialWeights()
 g.singlePass(dataset[0])
 
-for node in g.inputLayer.nodes:
-    print("------------------------------------------------")
-    node.printData()
+# for node in g.inputLayer.nodes:
+#     print("------------------------------------------------")
+#     node.printData()
+
+# for node in g.hiddenLayerList[0].nodes:
+#     print("------------------------------------------------")
+#     node.printData()

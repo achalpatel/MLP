@@ -4,6 +4,7 @@
 import numpy as np
 import pandas as pd
 from random import *
+import math
 
 
 class Node:
@@ -64,8 +65,13 @@ class HiddenLayer(Layer):
     pass
 
 class Utility:
-    def logistic(self, weights:list, values:list) -> float:
-        sumValue = 0
+    def logistic(node: Node) -> float:
+        sumValue = 0.0
+        for edge in node.inEdgeList:            
+            sumValue += edge.weight * edge.fromNode.value                
+        ans = 1/ (1 + math.exp(-sumValue))
+        return ans
+
         
 
 class Graph:
@@ -136,9 +142,13 @@ class Graph:
 
     def inputLayerFeed(self, values:list):
         for i in range(len(values)):
-            self.inputLayer.nodes[i].value = values[i]
+            self.inputLayer.nodes[i].value = int(values[i])
 
     def singlePass(self, rowLine: dict):
         attributes = rowLine['attributes']
         self.inputLayerFeed(attributes)
+        for layer in self.hiddenLayerList:
+            for node in layer.nodes:
+                node.value = Utility.logistic(node)
+                print(node.printData())
         
