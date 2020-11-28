@@ -6,6 +6,8 @@ import pandas as pd
 from random import *
 import math
 
+from pandas.core.frame import DataFrame
+
 
 class Node:
     def __init__(self):
@@ -81,6 +83,9 @@ class Graph:
         self.hiddenLayerList = []
         self.nodeList = []
         self.edgeList = []
+        self.df = None
+        self.maxAttribList = []
+        self.minAttribList = []
     
     def createHiddenLayer(self):
         layer = HiddenLayer()        
@@ -140,15 +145,30 @@ class Graph:
         for edge in self.edgeList:
             edge.printData()
 
-    def inputLayerFeed(self, values:list):
-        for i in range(len(values)):
-            self.inputLayer.nodes[i].value = values[i]
+    def readDf(self, dataframe : DataFrame):
+        self.df = dataframe
+        print("shape:" ,self.df.shape)
+        for i in range(self.df.shape[1]-1):
+            self.maxAttribList.append(pd.DataFrame.max(self.df.iloc[:,[i]]))
+            self.minAttribList.append(pd.DataFrame.min(self.df.iloc[:,[i]]))
+            print("i:",i, np.max(self.df[i]), np.min(self.df[i]))
 
-    def singlePass(self, rowLine: dict):
-        attributes = rowLine['attributes']
-        self.inputLayerFeed(attributes)
-        for layer in self.hiddenLayerList:
-            for node in layer.nodes:
-                node.value = Utility.logistic(node)
-                print(node.printData())
+    def inputLayerFeed(self, row : DataFrame):        
+        i = 0
+        for node in self.inputLayer.nodes:
+            node.value = row[i]
+            i+=1            
+
+        # for i in range(len(values)):
+        #     self.inputLayer.nodes[i].value = values[i]
+
+    def singlePass(self):
+        # print(self.df)
+        self.inputLayerFeed(self.df.iloc[0])
+
+        # self.inputLayerFeed(attributes)
+        # for layer in self.hiddenLayerList:
+        #     for node in layer.nodes:
+        #         node.value = Utility.logistic(node)
+        #         print(node.printData())
         
