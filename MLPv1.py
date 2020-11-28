@@ -142,7 +142,7 @@ class Graph:
 
     def inputLayerFeed(self, values:list):
         for i in range(len(values)):
-            self.inputLayer.nodes[i].value = int(values[i])
+            self.inputLayer.nodes[i].value = values[i]
 
     def singlePass(self, rowLine: dict):
         attributes = rowLine['attributes']
