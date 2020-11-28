@@ -158,7 +158,18 @@ class Graph:
             normalized = float((row[i]-self.minAttribList[i])/(self.maxAttribList[i] - self.minAttribList[i]))
             node.value = normalized
             i+=1            
+    
+    def softMax(self):
+        denominator = self.softMaxDenominator()
+        for node in self.outputLayer.nodes:
+            node.value = math.exp(node.value)/denominator
+            
 
+    def softMaxDenominator(self) -> float:
+        denominator = 0.0
+        for node in self.outputLayer.nodes:
+            denominator += math.exp(node.value)
+        return denominator
 
     def singlePass(self):
         self.inputLayerFeed(self.df.iloc[0])
@@ -168,5 +179,7 @@ class Graph:
         
         for node in self.outputLayer.nodes:
             node.value = Utility.logistic(node)
+
+        self.softMax()
         
         
