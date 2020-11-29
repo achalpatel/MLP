@@ -21,12 +21,6 @@ class Node:
     def addOutEdge(self, edge):
         self.outEdgeList.append(edge)
 
-    def printData(self):
-        print("value : ",self.value)
-        # for edge in self.inEdgeList:
-            # print("In - edge : ",edge)
-        # for edge in self.outEdgeList:
-            # print("Out - edge : ",edge)
         
 class InputNode(Node):
     pass
@@ -42,11 +36,7 @@ class Edge:
         self.fromNode = fromNode
         self.toNode = toNode
         self.weight = None
-    
-    def printData(self):
-        print("From Node : ", self.fromNode)
-        print("To Node : ", self.toNode)
-        print("Weight : ", self.weight)
+
 
 class Layer:
     def __init__(self):
@@ -86,6 +76,7 @@ class Graph:
         self.df = None
         self.maxAttribList = []
         self.minAttribList = []
+        self.targetList = []
     
     def createHiddenLayer(self):
         layer = HiddenLayer()        
@@ -153,23 +144,33 @@ class Graph:
             self.minAttribList.append(pd.DataFrame.min(self.df.iloc[:,[i]]))
 
     def inputLayerFeed(self, row : DataFrame):        
-        i = 0
+        x = 0
         for node in self.inputLayer.nodes:
-            normalized = float((row[i]-self.minAttribList[i])/(self.maxAttribList[i] - self.minAttribList[i]))
+            normalized = float((row[x]-self.minAttribList[x])/(self.maxAttribList[x] - self.minAttribList[x]))
             node.value = normalized
-            i+=1            
+            x+=1
+        self.targetList = [0] * len(self.outputLayer.nodes)
+        self.targetList[row[-1]-1] = 1        
     
     def softMax(self):
         denominator = self.softMaxDenominator()
         for node in self.outputLayer.nodes:
             node.value = math.exp(node.value)/denominator
             
-
     def softMaxDenominator(self) -> float:
         denominator = 0.0
         for node in self.outputLayer.nodes:
             denominator += math.exp(node.value)
         return denominator
+
+    def mse(self):
+        sumVal = 0.0
+        m = len(self.outputLayer.nodes)
+        for i in range(m):        
+            sumVal += (self.targetList[i] - self.outputLayer.nodes[i].value) ** 2
+        ans = sumVal/m
+        # print("mse:",ans)
+        return ans
 
     def singlePass(self):
         self.inputLayerFeed(self.df.iloc[0])
@@ -179,7 +180,7 @@ class Graph:
         
         for node in self.outputLayer.nodes:
             node.value = Utility.logistic(node)
-
         self.softMax()
+        self.mse()
         
         
