@@ -74,7 +74,8 @@ class Graph:
         self.hiddenLayerList = []
         self.nodeList = []
         self.edgeList = []
-        self.df = None
+        self.trainDf = None
+        self.testDf = None
         self.maxAttribList = []
         self.minAttribList = []
         self.targetList = []
@@ -139,11 +140,15 @@ class Graph:
             edge.printData()
 
     def readDf(self, dataframe : DataFrame):
-        self.df = dataframe
+        # self.trainDf = dataframe
+        self.trainDf = dataframe.sample(frac=0.8)
+        self.testDf = dataframe.drop(self.trainDf.index)    
+        self.trainDf.reset_index(drop=True, inplace=True)
+        self.testDf.reset_index(drop=True, inplace=True)     
         # Read Max, Min value of Each column and store in a List                
-        for i in range(self.df.shape[1]-1):
-            self.maxAttribList.append(pd.DataFrame.max(self.df.iloc[:,[i]]))
-            self.minAttribList.append(pd.DataFrame.min(self.df.iloc[:,[i]]))
+        for i in range(self.trainDf.shape[1]-1):
+            self.maxAttribList.append(pd.DataFrame.max(self.trainDf.iloc[:,[i]]))
+            self.minAttribList.append(pd.DataFrame.min(self.trainDf.iloc[:,[i]]))
 
     def inputLayerFeed(self, row : DataFrame):        
         x = 0
@@ -206,7 +211,7 @@ class Graph:
                 edge.weight += self.learningRate * edge.toNode.delta * node.value
 
     def singlePass(self, rowNumber):
-        self.inputLayerFeed(self.df.iloc[rowNumber])
+        self.inputLayerFeed(self.trainDf.iloc[rowNumber])
         for layer in self.hiddenLayerList:
             for node in layer.nodes:
                 node.value = Utility.logistic(node)
@@ -215,13 +220,44 @@ class Graph:
             node.value = Utility.logistic(node)
         
         self.softMax()
-        self.mse()
+        # self.mse()
         self.deltaForOutputLayer()
         self.deltaForHiddenLayer()
         self.updateHiddenToOutputWeights()
         self.updateInputToHiddenWeights()
 
     def runANN(self):
-        for i in range(self.df.shape[0]):
-            self.singlePass(i)
+        print("------------------------------------------------")
+        icount = 0
+        for node in self.inputLayer.nodes:    
+            for edge in node.outEdgeList:
+                print(icount," input edge weight:",edge.weight)
+                icount+=1
+        icount = 0
+        print("------------------------------------------------")
+        for node in self.hiddenLayerList[0].nodes:    
+            for edge in node.outEdgeList:
+                print(icount," hidden edge weight:",edge.weight)
+                icount+=1
         
+        for k in range(100):                                                          
+            for i in range(self.trainDf.shape[0]):
+                self.singlePass(i)
+        
+        # Last Pass
+        for i in range(self.trainDf.shape[0]):
+            self.singlePass(i)
+            self.mse()
+
+        icount = 0
+        print("------------------------------------------------")
+        for node in self.inputLayer.nodes:    
+            for edge in node.outEdgeList:
+                print(icount,"input edge weight:",edge.weight)
+                icount+=1
+        icount = 0
+        print("------------------------------------------------")
+        for node in self.hiddenLayerList[0].nodes:    
+            for edge in node.outEdgeList:
+                print(icount," hidden edge weight:",edge.weight)  
+                icount+=1

@@ -41,16 +41,16 @@ g.readDf(df)
 g.runANN()
 # g.singlePass()
 
-for node in g.inputLayer.nodes:    
-    print("input node value:",node.value)
+# for node in g.inputLayer.nodes:    
+#     print("input node value:",node.value)
 
-print("------------------------------------------------")
-for node in g.hiddenLayerList[0].nodes:    
-    print("hidden node value:",node.value)
+# print("------------------------------------------------")
+# for node in g.hiddenLayerList[0].nodes:    
+#     print("hidden node value:",node.value)
 
-print("------------------------------------------------")
-for node in g.outputLayer.nodes:    
-    print("output node value:",node.value)
+# print("------------------------------------------------")
+# for node in g.outputLayer.nodes:    
+#     print("output node value:",node.value)
 
 # g.updateHiddenToOutputWeights()
 # g.updateInputToHiddenWeights()
