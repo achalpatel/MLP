@@ -14,6 +14,7 @@ class Node:
         self.inEdgeList = []
         self.outEdgeList = []
         self.value = None
+        self.delta = None
     
     def addInEdge(self, edge):
         self.inEdgeList.append(edge)
@@ -169,8 +170,26 @@ class Graph:
         for i in range(m):        
             sumVal += (self.targetList[i] - self.outputLayer.nodes[i].value) ** 2
         ans = sumVal/m
-        # print("mse:",ans)
+        print("mse:",ans)
         return ans
+
+    def deltaForOutputLayer(self):
+        m = len(self.outputLayer.nodes)
+        for i in range(m):
+            node = self.outputLayer.nodes[i]
+            deltaVal = node.value * (1-node.value) * (self.targetListp[i]-node.value)
+            node.delta = deltaVal
+            
+    def deltaForHiddenLayer(self):
+        m = len(self.hiddenLayerList[0].nodes)
+        for i in range(m):
+            node = self.hiddenLayerList[0].nodes[i]
+            sumVal = 0.0
+            for edge in self.outEdgeList:
+                sumVal += edge.toNode.delta * edge.weight
+            deltaVal = node.value * (1-node.value) * sumVal
+            node.delta = deltaVal
+
 
     def singlePass(self):
         self.inputLayerFeed(self.df.iloc[0])
