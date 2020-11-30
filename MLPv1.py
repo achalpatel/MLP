@@ -226,38 +226,63 @@ class Graph:
         self.updateHiddenToOutputWeights()
         self.updateInputToHiddenWeights()
 
+    def trainDfTest(self):
+        rightAnswerCount = 0
+        for i in range(self.trainDf.shape[0]):
+            self.inputLayerFeed(self.trainDf.iloc[i])
+            for layer in self.hiddenLayerList:
+                for node in layer.nodes:
+                    node.value = Utility.logistic(node)
+
+            for node in self.outputLayer.nodes:
+                node.value = Utility.logistic(node)
+                
+            outputList = [node.value for node in self.outputLayer.nodes]
+            outputIndex = outputList.index(max(outputList))
+            targetIndex = self.targetList.index(max(self.targetList))
+
+            print("------------------------------------------------------")
+            print("outputList",outputList)
+            print("self.targetList",self.targetList)
+            print("Target Index : ", targetIndex)
+            print("Output Index:", outputIndex)
+            print("Output Difference : ", 1-outputList[outputIndex])
+            if outputIndex == targetIndex:
+                rightAnswerCount+=1
+        print("rightAnswerCount : ",rightAnswerCount, "/Out of : ",self.trainDf.shape[0])
+
     def runANN(self):
-        print("------------------------------------------------")
-        icount = 0
-        for node in self.inputLayer.nodes:    
-            for edge in node.outEdgeList:
-                print(icount," input edge weight:",edge.weight)
-                icount+=1
-        icount = 0
-        print("------------------------------------------------")
-        for node in self.hiddenLayerList[0].nodes:    
-            for edge in node.outEdgeList:
-                print(icount," hidden edge weight:",edge.weight)
-                icount+=1
+        # print("------------------------------------------------")
+        # icount = 0
+        # for node in self.inputLayer.nodes:    
+        #     for edge in node.outEdgeList:
+        #         print(icount," input edge weight:",edge.weight)
+        #         icount+=1
+        # icount = 0
+        # print("------------------------------------------------")
+        # for node in self.hiddenLayerList[0].nodes:    
+        #     for edge in node.outEdgeList:
+        #         print(icount," hidden edge weight:",edge.weight)
+        #         icount+=1
         
-        for k in range(100):                                                          
+        for k in range(10):                                                          
             for i in range(self.trainDf.shape[0]):
                 self.singlePass(i)
         
         # Last Pass
-        for i in range(self.trainDf.shape[0]):
-            self.singlePass(i)
-            self.mse()
+        # for i in range(self.trainDf.shape[0]):
+        #     self.singlePass(i)
+        #     self.mse()
 
-        icount = 0
-        print("------------------------------------------------")
-        for node in self.inputLayer.nodes:    
-            for edge in node.outEdgeList:
-                print(icount,"input edge weight:",edge.weight)
-                icount+=1
-        icount = 0
-        print("------------------------------------------------")
-        for node in self.hiddenLayerList[0].nodes:    
-            for edge in node.outEdgeList:
-                print(icount," hidden edge weight:",edge.weight)  
-                icount+=1
+        # icount = 0
+        # print("------------------------------------------------")
+        # for node in self.inputLayer.nodes:    
+        #     for edge in node.outEdgeList:
+        #         print(icount,"input edge weight:",edge.weight)
+        #         icount+=1
+        # icount = 0
+        # print("------------------------------------------------")
+        # for node in self.hiddenLayerList[0].nodes:    
+        #     for edge in node.outEdgeList:
+        #         print(icount," hidden edge weight:",edge.weight)  
+        #         icount+=1

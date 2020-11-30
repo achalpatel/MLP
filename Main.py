@@ -38,7 +38,9 @@ g.connectInputToHidden()
 g.connectHiddenToOutput()
 g.calculateInitialWeights()
 g.readDf(df)
+g.trainDfTest()
 g.runANN()
+g.trainDfTest()
 # g.singlePass()
 
 # for node in g.inputLayer.nodes:    
