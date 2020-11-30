@@ -78,6 +78,7 @@ class Graph:
         self.maxAttribList = []
         self.minAttribList = []
         self.targetList = []
+        self.learningRate = 0.1
     
     def createHiddenLayer(self):
         layer = HiddenLayer()        
@@ -177,7 +178,7 @@ class Graph:
         m = len(self.outputLayer.nodes)
         for i in range(m):
             node = self.outputLayer.nodes[i]
-            deltaVal = node.value * (1-node.value) * (self.targetListp[i]-node.value)
+            deltaVal = node.value * (1-node.value) * (self.targetList[i]-node.value)
             node.delta = deltaVal
             
     def deltaForHiddenLayer(self):
@@ -185,11 +186,24 @@ class Graph:
         for i in range(m):
             node = self.hiddenLayerList[0].nodes[i]
             sumVal = 0.0
-            for edge in self.outEdgeList:
+            for edge in node.outEdgeList:
                 sumVal += edge.toNode.delta * edge.weight
             deltaVal = node.value * (1-node.value) * sumVal
             node.delta = deltaVal
 
+    def updateHiddenToOutputWeights(self):
+        m = len(self.hiddenLayerList[0].nodes)
+        for i in range(m):
+            node = self.hiddenLayerList[0].nodes[i]
+            for edge in node.outEdgeList:
+                edge.weight += self.learningRate * edge.toNode.delta * node.value
+    
+    def updateInputToHiddenWeights(self):
+        m = len(self.inputLayer.nodes)
+        for i in range(m):
+            node = self.inputLayer.nodes[i]
+            for edge in node.outEdgeList:
+                edge.weight += self.learningRate * edge.toNode.delta * node.value
 
     def singlePass(self):
         self.inputLayerFeed(self.df.iloc[0])
@@ -201,5 +215,8 @@ class Graph:
             node.value = Utility.logistic(node)
         self.softMax()
         self.mse()
+        self.deltaForOutputLayer()
+        self.deltaForHiddenLayer()
+
         
         
