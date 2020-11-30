@@ -205,18 +205,23 @@ class Graph:
             for edge in node.outEdgeList:
                 edge.weight += self.learningRate * edge.toNode.delta * node.value
 
-    def singlePass(self):
-        self.inputLayerFeed(self.df.iloc[0])
+    def singlePass(self, rowNumber):
+        self.inputLayerFeed(self.df.iloc[rowNumber])
         for layer in self.hiddenLayerList:
             for node in layer.nodes:
                 node.value = Utility.logistic(node)
         
         for node in self.outputLayer.nodes:
             node.value = Utility.logistic(node)
+        
         self.softMax()
         self.mse()
         self.deltaForOutputLayer()
         self.deltaForHiddenLayer()
+        self.updateHiddenToOutputWeights()
+        self.updateInputToHiddenWeights()
 
-        
+    def runANN(self):
+        for i in range(self.df.shape[0]):
+            self.singlePass(i)
         
