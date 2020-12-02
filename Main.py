@@ -38,11 +38,12 @@ g.connectInputToHidden()
 g.connectHiddenToOutput()
 g.calculateInitialWeights()
 g.readDf(df)
-g.trainDfTest()
-g.runANN()
-g.trainDfTest()
-values, count = np.unique(g.trainDf['label'], return_counts=True)
+values, count = np.unique(g.df['label'], return_counts=True)
 print(values, count)
+# g.trainDfTest()
+# g.runANN()
+# g.trainDfTest()
+
 # g.singlePass()
 
 # for node in g.inputLayer.nodes:    

@@ -74,12 +74,13 @@ class Graph:
         self.hiddenLayerList = []
         self.nodeList = []
         self.edgeList = []
+        self.df = None
         self.trainDf = None
         self.testDf = None
         self.maxAttribList = []
         self.minAttribList = []
         self.targetList = []
-        self.learningRate = 0.1
+        self.learningRate = 0.01
     
     def createHiddenLayer(self):
         layer = HiddenLayer()        
@@ -132,10 +133,12 @@ class Graph:
                 toNode.addInEdge(edge)
             
     def calculateInitialWeights(self):
+        n = len(self.hiddenLayerList[0].nodes)
         for edge in self.edgeList:
-            edge.weight = random.uniform(0, 1/10)
+            edge.weight = random.uniform(0, 1/n)
 
     def readDf(self, dataframe : DataFrame):
+        self.df = dataframe.copy()
         self.trainDf = dataframe.sample(frac=0.8)
         self.testDf = dataframe.drop(self.trainDf.index)    
         self.trainDf.reset_index(drop=True, inplace=True)
@@ -145,6 +148,9 @@ class Graph:
             self.maxAttribList.append(pd.DataFrame.max(self.trainDf.iloc[:,[i]]))
             self.minAttribList.append(pd.DataFrame.min(self.trainDf.iloc[:,[i]]))
 
+    def balanceData(self):
+        pass
+    
     def inputLayerFeed(self, row : DataFrame):        
         x = 0
         for node in self.inputLayer.nodes:
@@ -205,7 +211,7 @@ class Graph:
             for edge in node.outEdgeList:
                 edge.weight += self.learningRate * edge.toNode.delta * node.value
     
-    def singlePass(self, rowNumber):
+    def singlePass(self, rowNumber) -> float:
         self.inputLayerFeed(self.trainDf.iloc[rowNumber])
         for layer in self.hiddenLayerList:
             for node in layer.nodes:
@@ -215,11 +221,12 @@ class Graph:
             node.value = Utility.logistic(node)
         
         self.softMax()
-        # self.mse()
+        mseVal = self.mse()
         self.deltaForOutputLayer()
         self.deltaForHiddenLayer()
         self.updateHiddenToOutputWeights()
         self.updateInputToHiddenWeights()
+        return mseVal
         
     def trainDfTest(self):
         rightAnswerCount = 0
@@ -260,10 +267,11 @@ class Graph:
         #     for edge in node.outEdgeList:
         #         print(icount," hidden edge weight:",edge.weight)
         #         icount+=1
-        
-        for k in range(20):                                                          
+        for k in range(10):
+            mseSum = 0.0
             for i in range(self.trainDf.shape[0]):
-                self.singlePass(i)
+                mseSum += self.singlePass(i)
+            print("Epoch[",k,"] MSE:",mseSum)
 
 
         # icount = 0
