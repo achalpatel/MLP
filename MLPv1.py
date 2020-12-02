@@ -139,8 +139,9 @@ class Graph:
 
     def readDf(self, dataframe : DataFrame):
         self.df = dataframe.copy()
-        self.trainDf = dataframe.sample(frac=0.8)
-        self.testDf = dataframe.drop(self.trainDf.index)    
+        self.balanceData()
+        self.trainDf = self.df.sample(frac=0.8)
+        self.testDf = self.df.drop(self.trainDf.index)    
         self.trainDf.reset_index(drop=True, inplace=True)
         self.testDf.reset_index(drop=True, inplace=True)     
         # Read Max, Min value of Each column and store in a List                
@@ -170,10 +171,10 @@ class Graph:
                 newDf = pd.DataFrame()
                 if firstCopies != 0:
                     newDf = pd.concat([row] * firstCopies)
-                if remainderCopies != 0:
-                    tempDf = row.iloc[ 0 : remainderCopies , : ]
-                    # print("tempDf:",tempDf)
-                    newDf = newDf.append(tempDf)
+                # if remainderCopies != 0:
+                #     tempDf = row.iloc[ 0 : remainderCopies , : ]
+                #     # print("tempDf:",tempDf)
+                #     newDf = newDf.append(tempDf)
                 self.df = self.df.append(newDf)
                 # print("copies:",numberOfCopies,"row:",row.shape[0],"newDf:",newDf.shape[0],",df:",self.df.shape[0])
                  
@@ -282,7 +283,7 @@ class Graph:
         print("rightAnswerCount : ",rightAnswerCount, "/Out of : ",self.trainDf.shape[0])
 
     def runANN(self):
-        for k in range(20):
+        for k in range(10):
             mseSum = 0.0
             for i in range(self.trainDf.shape[0]):
                 mseSum += self.singlePass(i)
