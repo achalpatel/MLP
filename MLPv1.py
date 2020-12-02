@@ -158,19 +158,25 @@ class Graph:
         print("countList : ",countList)
 
         countDataToAddList = [abs(max(countList)-x) for x in countList]
-        print("countDataToAddList : ",countDataToAddList)
+        # print("countDataToAddList : ",countDataToAddList)
         for i in range(len(valuesList)):
             numberOfCopies = countDataToAddList[i]
             label_value = valuesList[i]
             row = self.df.loc[self.df['label'] == label_value]
+            # print(row)
             if numberOfCopies>0:
-
-                newDf = pd.concat([row] * numberOfCopies/row.shape[0])
-                remainderCopies = numberOfCopies%row.shape[0]
-                newDf = pd.concat([row] * numberOfCopies)
-                print("copies:",numberOfCopies,"row:",row.shape[0],"newDf:",newDf.shape[0],",df:",self.df.shape[0])
-                self.df = self.df.append(newDf) 
-        print(self.df)
+                firstCopies = int(numberOfCopies/row.shape[0])
+                remainderCopies = int(numberOfCopies % row.shape[0])
+                newDf = pd.DataFrame()
+                if firstCopies != 0:
+                    newDf = pd.concat([row] * firstCopies)
+                if remainderCopies != 0:
+                    tempDf = row.iloc[ 0 : remainderCopies , : ]
+                    # print("tempDf:",tempDf)
+                    newDf = newDf.append(tempDf)
+                self.df = self.df.append(newDf)
+                # print("copies:",numberOfCopies,"row:",row.shape[0],"newDf:",newDf.shape[0],",df:",self.df.shape[0])
+                 
 
     
     def inputLayerFeed(self, row : DataFrame):        
@@ -266,17 +272,17 @@ class Graph:
             outputIndex = outputList.index(max(outputList))
             targetIndex = self.targetList.index(max(self.targetList))
 
-            # print("------------------------------------------------------")
-            # print("outputList",outputList)
-            # print("self.targetList",self.targetList)
-            # print("Target Index : ", targetIndex)
-            # print("Output Index:", outputIndex)
+            print("------------------------------------------------------")
+            print("outputList",outputList)
+            print("self.targetList",self.targetList)
+            print("Target Index : ", targetIndex)
+            print("Output Index:", outputIndex)
             if outputIndex == targetIndex:
                 rightAnswerCount+=1
         print("rightAnswerCount : ",rightAnswerCount, "/Out of : ",self.trainDf.shape[0])
 
     def runANN(self):
-        for k in range(10):
+        for k in range(20):
             mseSum = 0.0
             for i in range(self.trainDf.shape[0]):
                 mseSum += self.singlePass(i)
