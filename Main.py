@@ -10,7 +10,6 @@ def read_file(filepath) -> list:
             compiler = re.compile("\d+")
             dataList = compiler.findall(line)                        
             row = list(map(int, dataList[1:]))            
-            # print(row)
             dataset.append(row)
     return dataset
 
@@ -40,34 +39,5 @@ g.calculateInitialWeights()
 g.readDf(df)
 values, count = np.unique(g.df['label'], return_counts=True)
 print(values, count)
-# g.trainDfTest()
-# g.runANN()
-# g.trainDfTest()
-
-# g.singlePass()
-
-# for node in g.inputLayer.nodes:    
-#     print("input node value:",node.value)
-
-# print("------------------------------------------------")
-# for node in g.hiddenLayerList[0].nodes:    
-#     print("hidden node value:",node.value)
-
-# print("------------------------------------------------")
-# for node in g.outputLayer.nodes:    
-#     print("output node value:",node.value)
-
-# g.updateHiddenToOutputWeights()
-# g.updateInputToHiddenWeights()
-# g.singlePass()
-# print("------------------------------------------------")
-# for node in g.inputLayer.nodes:    
-#     print("input node value:",node.value)
-
-# print("------------------------------------------------")
-# for node in g.hiddenLayerList[0].nodes:    
-#     print("hidden node value:",node.value)
-
-# print("------------------------------------------------")
-# for node in g.outputLayer.nodes:    
-#     print("output node value:",node.value)
+g.runANN()
+g.trainDfTest()

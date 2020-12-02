@@ -244,45 +244,18 @@ class Graph:
             outputIndex = outputList.index(max(outputList))
             targetIndex = self.targetList.index(max(self.targetList))
 
-            print("------------------------------------------------------")
-            print("outputList",outputList)
-            print("self.targetList",self.targetList)
+            # print("------------------------------------------------------")
+            # print("outputList",outputList)
+            # print("self.targetList",self.targetList)
             print("Target Index : ", targetIndex)
             print("Output Index:", outputIndex)
-#             print("Output Difference : ", 1-outputList[outputIndex])
             if outputIndex == targetIndex:
                 rightAnswerCount+=1
         print("rightAnswerCount : ",rightAnswerCount, "/Out of : ",self.trainDf.shape[0])
 
     def runANN(self):
-        # print("------------------------------------------------")
-        # icount = 0
-        # for node in self.inputLayer.nodes:    
-        #     for edge in node.outEdgeList:
-        #         print(icount," input edge weight:",edge.weight)
-        #         icount+=1
-        # icount = 0
-        # print("------------------------------------------------")
-        # for node in self.hiddenLayerList[0].nodes:    
-        #     for edge in node.outEdgeList:
-        #         print(icount," hidden edge weight:",edge.weight)
-        #         icount+=1
         for k in range(10):
             mseSum = 0.0
             for i in range(self.trainDf.shape[0]):
                 mseSum += self.singlePass(i)
             print("Epoch[",k,"] MSE:",mseSum)
-
-
-        # icount = 0
-        # print("------------------------------------------------")
-        # for node in self.inputLayer.nodes:    
-        #     for edge in node.outEdgeList:
-        #         print(icount,"input edge weight:",edge.weight)
-        #         icount+=1
-        # icount = 0
-        # print("------------------------------------------------")
-        # for node in self.hiddenLayerList[0].nodes:    
-        #     for edge in node.outEdgeList:
-        #         print(icount," hidden edge weight:",edge.weight)  
-        #         icount+=1
