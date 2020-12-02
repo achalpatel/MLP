@@ -134,13 +134,8 @@ class Graph:
     def calculateInitialWeights(self):
         for edge in self.edgeList:
             edge.weight = random.uniform(0, 1/10)
-    
-    def printEdgeData(self):
-        for edge in self.edgeList:
-            edge.printData()
 
     def readDf(self, dataframe : DataFrame):
-        # self.trainDf = dataframe
         self.trainDf = dataframe.sample(frac=0.8)
         self.testDf = dataframe.drop(self.trainDf.index)    
         self.trainDf.reset_index(drop=True, inplace=True)
@@ -156,8 +151,8 @@ class Graph:
             normalized = float((row[x]-self.minAttribList[x])/(self.maxAttribList[x] - self.minAttribList[x]))
             node.value = normalized
             x+=1
-        self.targetList = [0] * len(self.outputLayer.nodes)
-        self.targetList[row[-1]-1] = 1        
+        self.targetList = [0.2] * len(self.outputLayer.nodes)
+        self.targetList[row[-1]] = 0.8        
     
     def softMax(self):
         denominator = self.softMaxDenominator()
@@ -176,7 +171,7 @@ class Graph:
         for i in range(m):        
             sumVal += (self.targetList[i] - self.outputLayer.nodes[i].value) ** 2
         ans = sumVal/m
-        print("mse:",ans)
+#         print("mse:",ans)
         return ans
 
     def deltaForOutputLayer(self):
@@ -209,7 +204,7 @@ class Graph:
             node = self.inputLayer.nodes[i]
             for edge in node.outEdgeList:
                 edge.weight += self.learningRate * edge.toNode.delta * node.value
-
+    
     def singlePass(self, rowNumber):
         self.inputLayerFeed(self.trainDf.iloc[rowNumber])
         for layer in self.hiddenLayerList:
@@ -225,7 +220,7 @@ class Graph:
         self.deltaForHiddenLayer()
         self.updateHiddenToOutputWeights()
         self.updateInputToHiddenWeights()
-
+        
     def trainDfTest(self):
         rightAnswerCount = 0
         for i in range(self.trainDf.shape[0]):
@@ -236,7 +231,8 @@ class Graph:
 
             for node in self.outputLayer.nodes:
                 node.value = Utility.logistic(node)
-                
+            
+            self.softMax()
             outputList = [node.value for node in self.outputLayer.nodes]
             outputIndex = outputList.index(max(outputList))
             targetIndex = self.targetList.index(max(self.targetList))
@@ -246,7 +242,7 @@ class Graph:
             print("self.targetList",self.targetList)
             print("Target Index : ", targetIndex)
             print("Output Index:", outputIndex)
-            print("Output Difference : ", 1-outputList[outputIndex])
+#             print("Output Difference : ", 1-outputList[outputIndex])
             if outputIndex == targetIndex:
                 rightAnswerCount+=1
         print("rightAnswerCount : ",rightAnswerCount, "/Out of : ",self.trainDf.shape[0])
@@ -265,14 +261,10 @@ class Graph:
         #         print(icount," hidden edge weight:",edge.weight)
         #         icount+=1
         
-        for k in range(10):                                                          
+        for k in range(20):                                                          
             for i in range(self.trainDf.shape[0]):
                 self.singlePass(i)
-        
-        # Last Pass
-        # for i in range(self.trainDf.shape[0]):
-        #     self.singlePass(i)
-        #     self.mse()
+
 
         # icount = 0
         # print("------------------------------------------------")

@@ -41,6 +41,8 @@ g.readDf(df)
 g.trainDfTest()
 g.runANN()
 g.trainDfTest()
+values, count = np.unique(g.trainDf['label'], return_counts=True)
+print(values, count)
 # g.singlePass()
 
 # for node in g.inputLayer.nodes:    
