@@ -149,7 +149,29 @@ class Graph:
             self.minAttribList.append(pd.DataFrame.min(self.trainDf.iloc[:,[i]]))
 
     def balanceData(self):
-        pass
+        values, count = np.unique(self.df['label'], return_counts=True)
+        countList = list(count)
+        valuesList = list(values)
+        countDistribution = [(x/sum(countList))*100 for x in countList]
+        print("Initial Data : ")
+        print("countDistribution : ",countDistribution)
+        print("countList : ",countList)
+
+        countDataToAddList = [abs(max(countList)-x) for x in countList]
+        print("countDataToAddList : ",countDataToAddList)
+        for i in range(len(valuesList)):
+            numberOfCopies = countDataToAddList[i]
+            label_value = valuesList[i]
+            row = self.df.loc[self.df['label'] == label_value]
+            if numberOfCopies>0:
+
+                newDf = pd.concat([row] * numberOfCopies/row.shape[0])
+                remainderCopies = numberOfCopies%row.shape[0]
+                newDf = pd.concat([row] * numberOfCopies)
+                print("copies:",numberOfCopies,"row:",row.shape[0],"newDf:",newDf.shape[0],",df:",self.df.shape[0])
+                self.df = self.df.append(newDf) 
+        print(self.df)
+
     
     def inputLayerFeed(self, row : DataFrame):        
         x = 0
@@ -247,8 +269,8 @@ class Graph:
             # print("------------------------------------------------------")
             # print("outputList",outputList)
             # print("self.targetList",self.targetList)
-            print("Target Index : ", targetIndex)
-            print("Output Index:", outputIndex)
+            # print("Target Index : ", targetIndex)
+            # print("Output Index:", outputIndex)
             if outputIndex == targetIndex:
                 rightAnswerCount+=1
         print("rightAnswerCount : ",rightAnswerCount, "/Out of : ",self.trainDf.shape[0])
