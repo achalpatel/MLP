@@ -139,18 +139,19 @@ class Graph:
 
     def readDf(self, dataframe : DataFrame):
         self.df = dataframe.copy()
-        self.balanceData()
+        
         self.trainDf = self.df.sample(frac=0.8)
         self.testDf = self.df.drop(self.trainDf.index)    
         self.trainDf.reset_index(drop=True, inplace=True)
         self.testDf.reset_index(drop=True, inplace=True)     
+        self.balanceData()
         # Read Max, Min value of Each column and store in a List                
         for i in range(self.trainDf.shape[1]-1):
             self.maxAttribList.append(pd.DataFrame.max(self.trainDf.iloc[:,[i]]))
             self.minAttribList.append(pd.DataFrame.min(self.trainDf.iloc[:,[i]]))
 
     def balanceData(self):
-        values, count = np.unique(self.df['label'], return_counts=True)
+        values, count = np.unique(self.trainDf['label'], return_counts=True)
         countList = list(count)
         valuesList = list(values)
         countDistribution = [(x/sum(countList))*100 for x in countList]
@@ -159,11 +160,11 @@ class Graph:
         print("countList : ",countList)
 
         countDataToAddList = [abs(max(countList)-x) for x in countList]
-        # print("countDataToAddList : ",countDataToAddList)
+        print("countDataToAddList : ",countDataToAddList)
         for i in range(len(valuesList)):
             numberOfCopies = countDataToAddList[i]
             label_value = valuesList[i]
-            row = self.df.loc[self.df['label'] == label_value]
+            row = self.trainDf.loc[self.trainDf['label'] == label_value]
             # print(row)
             if numberOfCopies>0:
                 firstCopies = int(numberOfCopies/row.shape[0])
@@ -171,12 +172,12 @@ class Graph:
                 newDf = pd.DataFrame()
                 if firstCopies != 0:
                     newDf = pd.concat([row] * firstCopies)
-                # if remainderCopies != 0:
-                #     tempDf = row.iloc[ 0 : remainderCopies , : ]
-                #     # print("tempDf:",tempDf)
-                #     newDf = newDf.append(tempDf)
-                self.df = self.df.append(newDf)
-                # print("copies:",numberOfCopies,"row:",row.shape[0],"newDf:",newDf.shape[0],",df:",self.df.shape[0])
+                if remainderCopies != 0:
+                    tempDf = row.iloc[ 0 : remainderCopies , : ]
+                    # print("tempDf:",tempDf)
+                    newDf = newDf.append(tempDf)
+                self.trainDf = self.trainDf.append(newDf)
+                print("copies:",numberOfCopies,"row:",row.shape[0],"newDf:",newDf.shape[0],",df:",self.trainDf.shape[0])
                  
 
     
@@ -259,8 +260,10 @@ class Graph:
         
     def trainDfTest(self):
         rightAnswerCount = 0
-        for i in range(self.trainDf.shape[0]):
-            self.inputLayerFeed(self.trainDf.iloc[i])
+        outputIndexList = [0] * 8
+        targetIndexList = [0] * 8
+        for i in range(self.testDf.shape[0]):
+            self.inputLayerFeed(self.testDf.iloc[i])
             for layer in self.hiddenLayerList:
                 for node in layer.nodes:
                     node.value = Utility.logistic(node)
@@ -273,14 +276,19 @@ class Graph:
             outputIndex = outputList.index(max(outputList))
             targetIndex = self.targetList.index(max(self.targetList))
 
-            print("------------------------------------------------------")
-            print("outputList",outputList)
-            print("self.targetList",self.targetList)
-            print("Target Index : ", targetIndex)
-            print("Output Index:", outputIndex)
+            # print("------------------------------------------------------")
+            # print("outputList",outputList)
+            # print("self.targetList",self.targetList)
+            # print("Target Index : ", targetIndex)
+            # print("Output Index:", outputIndex)
+            outputIndexList[outputIndex] += 1
+            targetIndexList[targetIndex] += 1
             if outputIndex == targetIndex:
                 rightAnswerCount+=1
-        print("rightAnswerCount : ",rightAnswerCount, "/Out of : ",self.trainDf.shape[0])
+        print("targetIndexList : ",targetIndexList)
+        print("outputIndexList : ",outputIndexList)
+        print("rightAnswerCount : ",rightAnswerCount, "/Out of : ",self.testDf.shape[0])
+
 
     def runANN(self):
         for k in range(10):
