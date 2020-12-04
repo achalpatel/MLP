@@ -262,8 +262,8 @@ class Graph:
         rightAnswerCount = 0
         outputIndexList = [0] * 8
         targetIndexList = [0] * 8
-        for i in range(self.testDf.shape[0]):
-            self.inputLayerFeed(self.testDf.iloc[i])
+        for i in range(self.trainDf.shape[0]):
+            self.inputLayerFeed(self.trainDf.iloc[i])
             for layer in self.hiddenLayerList:
                 for node in layer.nodes:
                     node.value = Utility.logistic(node)
@@ -287,7 +287,7 @@ class Graph:
                 rightAnswerCount+=1
         print("targetIndexList : ",targetIndexList)
         print("outputIndexList : ",outputIndexList)
-        print("rightAnswerCount : ",rightAnswerCount, "/Out of : ",self.testDf.shape[0])
+        print("rightAnswerCount : ",rightAnswerCount, "/Out of : ",self.trainDf.shape[0])
 
 
     def runANN(self):
