@@ -144,7 +144,7 @@ class Graph:
         self.testDf = self.df.drop(self.trainDf.index)    
         self.trainDf.reset_index(drop=True, inplace=True)
         self.testDf.reset_index(drop=True, inplace=True)     
-        self.balanceData()
+        # self.balanceData()
         # Read Max, Min value of Each column and store in a List                
         for i in range(self.trainDf.shape[1]-1):
             self.maxAttribList.append(pd.DataFrame.max(self.trainDf.iloc[:,[i]]))
