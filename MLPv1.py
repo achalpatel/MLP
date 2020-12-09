@@ -68,11 +68,10 @@ class Utility:
         
 
 class Graph:
-    def __init__(self):
+    def __init__(self, learningRate):
         self.inputLayer = InputLayer()
         self.outputLayer = OutputLayer()
         self.hiddenLayerList = []
-        self.nodeList = []
         self.edgeList = []
         self.df = None
         self.trainDf = None
@@ -80,41 +79,33 @@ class Graph:
         self.maxAttribList = []
         self.minAttribList = []
         self.targetList = []
-        self.learningRate = 0.01
+        self.learningRate = learningRate
     
-    def createHiddenLayer(self):
-        layer = HiddenLayer()        
-        self.hiddenLayerList.append(layer)    
+    def createHiddenLayers(self, count : int):
+        for i in range(count):
+            layer = HiddenLayer()        
+            self.hiddenLayerList.append(layer)    
     
-    def createInputNode(self):
-        node = InputNode()
-        self.inputLayer.addNode(node)
-        self.nodeList.append(node)
-        return node
-    
-    def createOutputNode(self):
-        node = OutputNode()
-        self.outputLayer.addNode(node)
-        self.nodeList.append(node)
-        return node
-    
-    def createHiddenNode(self, hiddenLayer: HiddenLayer):
-        node = HiddenNode()
-        hiddenLayer.addNode(node)
-        self.nodeList.append(node)
-        return node
+    def createNodes(self, inputNodeCount : int, hiddenNodeCount : int, outputNodeCount : int):
+        self.createMultipleInputNodes(inputNodeCount)
+        self.createMultipleHiddenNodes
+        self.createMultipleOutputNodes(outputNodeCount)    
 
     def createMultipleInputNodes(self, count : int):        
         for i in range(count):
-            self.createInputNode()            
+            node = InputNode()         
+            self.inputLayer.addNode(node)
 
     def createMultipleOutputNodes(self, count : int):        
         for i in range(count):
-            self.createOutputNode()            
+            node = OutputNode()
+            self.outputLayer.addNode(node)            
 
-    def createMultipleHiddenNodes(self, hiddenLayer : HiddenLayer, count : int):        
-        for i in range(count):
-            self.createHiddenNode(hiddenLayer)
+    def createMultipleHiddenNodes(self, count : int):        
+        for hiddenLayer in self.hiddenLayerList:            
+            for i in range(count):
+                node = HiddenNode()
+                hiddenLayer.addNode(node)
 
     def connectInputToHidden(self):
         for fromNode in self.inputLayer.nodes:

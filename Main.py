@@ -21,14 +21,14 @@ def createDataFrame(dataset : list):
 dataset = read_file("dataset.txt")
 df = createDataFrame(dataset)
 numberOfInputNodes = 10
+numberOfHiddenNodes = 10
 numberOfOutputNodes = 8
-g = Graph()
-g.createHiddenLayer()
-g.createMultipleInputNodes(numberOfInputNodes)
-g.createMultipleHiddenNodes(g.hiddenLayerList[0], 10)
-g.createMultipleOutputNodes(numberOfOutputNodes)
+numberOfHiddenLayers = 1
+learningRate = 0.01
+g = Graph(learningRate)
+g.createHiddenLayers(numberOfHiddenLayers)
+g.createNodes(numberOfInputNodes, numberOfHiddenNodes, numberOfOutputNodes)
 
-print("Graph total nodes : ",len(g.nodeList))
 print("Input Nodes : ", len(g.inputLayer.nodes))
 print("Output Nodes : ", len(g.outputLayer.nodes))
 print("Hidden Nodes : ", len(g.hiddenLayerList[0].nodes))
