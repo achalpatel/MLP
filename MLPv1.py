@@ -62,7 +62,7 @@ class Utility:
         sumValue = 0.0
         for edge in node.inEdgeList:            
             sumValue += edge.weight * edge.fromNode.value
-        ans = 1/ (1 + math.exp(-sumValue))
+        ans = 1.0 / (1.0 + math.exp(-sumValue))
         return ans
 
         
@@ -258,12 +258,12 @@ class Graph:
         self.updateInputToHiddenWeights()
         return mseVal
         
-    def trainDfTest(self):
+    def dfTest(self, dataframe):
         rightAnswerCount = 0
         outputIndexList = [0] * 8
         targetIndexList = [0] * 8
-        for i in range(self.trainDf.shape[0]):
-            self.inputLayerFeed(self.trainDf.iloc[i])
+        for i in range(dataframe.shape[0]):
+            self.inputLayerFeed(dataframe.iloc[i])
             for layer in self.hiddenLayerList:
                 for node in layer.nodes:
                     node.value = Utility.logistic(node)
@@ -287,8 +287,7 @@ class Graph:
                 rightAnswerCount+=1
         print("targetIndexList : ",targetIndexList)
         print("outputIndexList : ",outputIndexList)
-        print("rightAnswerCount : ",rightAnswerCount, "/Out of : ",self.trainDf.shape[0])
-
+        print("rightAnswerCount : ",rightAnswerCount, "/Out of : ",dataframe.shape[0])
 
     def runANN(self):
         for k in range(10):

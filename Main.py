@@ -38,6 +38,12 @@ g.connectHiddenToOutput()
 g.calculateInitialWeights()
 g.readDf(df)
 g.runANN()
-g.trainDfTest()
+# Run prediction on Training set
+print("Train Set Prediction-------------------------------------")
+g.dfTest(g.trainDf)
+
+# Run Prediction on Testing set
+print("Test Set Prediction-------------------------------------")
+g.dfTest(g.testDf)
 values, count = np.unique(g.trainDf['label'], return_counts=True)
 print(values, count)
