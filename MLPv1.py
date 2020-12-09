@@ -107,22 +107,29 @@ class Graph:
                 node = HiddenNode()
                 hiddenLayer.addNode(node)
 
-    def connectInputToHidden(self):
-        for fromNode in self.inputLayer.nodes:
-            for toNode in self.hiddenLayerList[0].nodes:
+    def connectLayers(self, fromLayer, toLayer):
+        for fromNode in fromLayer.nodes:
+            for toNode in toLayer.nodes:
                 edge = Edge(fromNode, toNode)
                 self.edgeList.append(edge)
                 fromNode.addOutEdge(edge)
                 toNode.addInEdge(edge)
+    
+    def connectInputToHidden(self):
+        self.connectLayers(self.inputLayer, self.hiddenLayerList[0])
+   
+    def connectHiddenToHidden(self):
+        for i in range(len(self.hiddenLayerList)-1):
+            self.connectLayers(self.hiddenLayerList[i], self.hiddenLayerList[i+1])
 
     def connectHiddenToOutput(self):
-        for fromNode in self.hiddenLayerList[0].nodes:
-            for toNode in self.outputLayer.nodes:
-                edge = Edge(fromNode, toNode)
-                self.edgeList.append(edge)
-                fromNode.addOutEdge(edge)
-                toNode.addInEdge(edge)
-            
+        self.connectLayers(self.hiddenLayerList[-1], self.outputLayer)
+    
+    def connectGraph(self):
+        self.connectInputToHidden()
+        self.connectHiddenToHidden()
+        self.connectHiddenToOutput()
+        
     def calculateInitialWeights(self):
         n = len(self.hiddenLayerList[0].nodes)
         for edge in self.edgeList:
