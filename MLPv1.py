@@ -286,9 +286,15 @@ class Graph:
         print("outputIndexList : ",outputIndexList)
         print("rightAnswerCount : ",rightAnswerCount, "/Out of : ",dataframe.shape[0])
 
+    def adaptiveLearning(self, t : int, n0 : float):
+        alpha = 0.01
+        self.learningRate = n0 * (math.exp(-alpha * t))
+    
     def runANN(self, epochs : int):
+        n0 = self.learningRate
         for k in range(epochs):
             mseSum = 0.0
             for i in range(self.trainDf.shape[0]):
                 mseSum += self.singlePass(i)
-            print("Epoch[",k,"] MSE:",mseSum)
+            print("Epoch[",k,"] MSE:",mseSum,", LRate : ",self.learningRate)
+            self.adaptiveLearning(k+1, n0)
