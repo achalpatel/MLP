@@ -24,7 +24,7 @@ numberOfInputNodes = 10
 numberOfHiddenNodes = 10
 numberOfOutputNodes = 8
 numberOfHiddenLayers = 1
-learningRate = 0.01
+learningRate = 0.001
 g = Graph(learningRate)
 g.createHiddenLayers(numberOfHiddenLayers)
 g.createNodes(numberOfInputNodes, numberOfHiddenNodes, numberOfOutputNodes)
@@ -36,7 +36,8 @@ print("Hidden Nodes : ", len(g.hiddenLayerList[0].nodes))
 g.connectGraph()
 g.calculateInitialWeights()
 g.readDf(df)
-g.runANN()
+epochs = 20
+g.runANN(epochs)
 # Run prediction on Training set
 print("Train Set Prediction-------------------------------------")
 g.dfTest(g.trainDf)
@@ -44,5 +45,3 @@ g.dfTest(g.trainDf)
 # Run Prediction on Testing set
 print("Test Set Prediction-------------------------------------")
 g.dfTest(g.testDf)
-values, count = np.unique(g.trainDf['label'], return_counts=True)
-print(values, count)

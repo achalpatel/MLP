@@ -88,7 +88,7 @@ class Graph:
     
     def createNodes(self, inputNodeCount : int, hiddenNodeCount : int, outputNodeCount : int):
         self.createMultipleInputNodes(inputNodeCount)
-        self.createMultipleHiddenNodes
+        self.createMultipleHiddenNodes(hiddenNodeCount)
         self.createMultipleOutputNodes(outputNodeCount)    
 
     def createMultipleInputNodes(self, count : int):        
@@ -133,11 +133,10 @@ class Graph:
     def calculateInitialWeights(self):
         n = len(self.hiddenLayerList[0].nodes)
         for edge in self.edgeList:
-            edge.weight = random.uniform(0, 1/n)
+            edge.weight = random.uniform(-0.1, 0.1)
 
     def readDf(self, dataframe : DataFrame):
-        self.df = dataframe.copy()
-        
+        self.df = dataframe.copy()        
         self.trainDf = self.df.sample(frac=0.8)
         self.testDf = self.df.drop(self.trainDf.index)    
         self.trainDf.reset_index(drop=True, inplace=True)
@@ -170,12 +169,12 @@ class Graph:
                 newDf = pd.DataFrame()
                 if firstCopies != 0:
                     newDf = pd.concat([row] * firstCopies)
-                if remainderCopies != 0:
-                    tempDf = row.iloc[ 0 : remainderCopies , : ]
-                    # print("tempDf:",tempDf)
-                    newDf = newDf.append(tempDf)
+                # if remainderCopies != 0:
+                #     tempDf = row.iloc[ 0 : remainderCopies , : ]
+                #     # print("tempDf:",tempDf)
+                #     newDf = newDf.append(tempDf)
                 self.trainDf = self.trainDf.append(newDf)
-                print("copies:",numberOfCopies,"row:",row.shape[0],"newDf:",newDf.shape[0],",df:",self.trainDf.shape[0])
+                # print("copies:",numberOfCopies,"row:",row.shape[0],"newDf:",newDf.shape[0],",df:",self.trainDf.shape[0])
                  
 
     
@@ -287,8 +286,8 @@ class Graph:
         print("outputIndexList : ",outputIndexList)
         print("rightAnswerCount : ",rightAnswerCount, "/Out of : ",dataframe.shape[0])
 
-    def runANN(self):
-        for k in range(10):
+    def runANN(self, epochs : int):
+        for k in range(epochs):
             mseSum = 0.0
             for i in range(self.trainDf.shape[0]):
                 mseSum += self.singlePass(i)
