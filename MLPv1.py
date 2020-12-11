@@ -68,7 +68,7 @@ class Utility:
         
 
 class Graph:
-    def __init__(self, learningRate):
+    def __init__(self, learningRate, numberOfInputNodes, numberOfHiddenNodes, numberOfOutputNodes, numberOfHiddenLayers):
         self.inputLayer = InputLayer()
         self.outputLayer = OutputLayer()
         self.hiddenLayerList = []
@@ -81,6 +81,10 @@ class Graph:
         self.minAttribList = []
         self.targetList = []
         self.learningRate = learningRate
+        self.createHiddenLayers(numberOfHiddenLayers)
+        self.createNodes(numberOfInputNodes, numberOfHiddenNodes, numberOfOutputNodes)
+        self.connectGraph()
+        self.calculateInitialWeights()
     
     def createHiddenLayers(self, count : int):
         for i in range(count):

@@ -17,26 +17,21 @@ def createDataFrame(dataset : list):
     df = pd.DataFrame(dataset, columns=['a1','a2','a3','a4','a5','a6','a7','a8','a9','a10','label'])    
     return df
 
-
 dataset = read_file("dataset.txt")
 validation_set = read_file("validation_set.txt")
 df = createDataFrame(dataset)
 validationDf = createDataFrame(validation_set)
 numberOfInputNodes = 10
-numberOfHiddenNodes = 10
+numberOfHiddenNodes = 11
 numberOfOutputNodes = 8
 numberOfHiddenLayers = 1
-learningRate = 0.1
-g = Graph(learningRate)
-g.createHiddenLayers(numberOfHiddenLayers)
-g.createNodes(numberOfInputNodes, numberOfHiddenNodes, numberOfOutputNodes)
+learningRate = 0.01
+g = Graph(learningRate, numberOfInputNodes, numberOfHiddenNodes, numberOfOutputNodes, numberOfHiddenLayers)
 
 print("Input Nodes : ", len(g.inputLayer.nodes))
 print("Output Nodes : ", len(g.outputLayer.nodes))
 print("Hidden Nodes : ", len(g.hiddenLayerList[0].nodes))
 
-g.connectGraph()
-g.calculateInitialWeights()
 g.readDf(df)
 g.validationDf = validationDf
 # Print Initial Weights
@@ -44,7 +39,7 @@ print("Initial Weights:")
 # g.printEdgeWeights()
 
 # Train MLP
-epochs = 5
+epochs = 15
 g.runANN(epochs)
 
 # print Finial weights
