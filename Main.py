@@ -32,6 +32,7 @@ print("\n\n=====================================================================
 print("Input Nodes : ", len(g.inputLayer.nodes))
 print("Output Nodes : ", len(g.outputLayer.nodes))
 print("Hidden Nodes : ", len(g.hiddenLayerList[0].nodes))
+print("Initial Learning Rate : ", g.learningRate)
 print("============================================================================================================")
 
 g.readDf(df)
@@ -42,7 +43,7 @@ g.printEdgeWeights()
 
 print("\n\n============================================================================================================")
 # Train MLP
-epochs = 15
+epochs = 45
 g.runANN(epochs)
 
 print("\n\n============================================================================================================")
