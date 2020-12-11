@@ -274,28 +274,22 @@ class Graph:
             outputList = [node.value for node in self.outputLayer.nodes]
             outputIndex = outputList.index(max(outputList))
             targetIndex = self.targetList.index(max(self.targetList))
-            # print(outputIndex, targetIndex)
-            confusionMatrix[outputIndex][targetIndex] += 1
-            # print("------------------------------------------------------")
-            # print("outputList",outputList)
-            # print("self.targetList",self.targetList)
-            # print("Target Index : ", targetIndex)
-            # print("Output Index:", outputIndex)
+            confusionMatrix[outputIndex][targetIndex] += 1        
             outputIndexList[outputIndex] += 1
             targetIndexList[targetIndex] += 1
             if outputIndex == targetIndex:
-                rightAnswerCount+=1
-        print("confusionMatrix : ", confusionMatrix)
+                rightAnswerCount+=1        
         print("targetIndexList : ",targetIndexList)
         print("outputIndexList : ",outputIndexList)
         print("rightAnswerCount : ",rightAnswerCount, "/Out of : ",dataframe.shape[0])
-        rateDictList = self.calculateRates(confusionMatrix)
-        self.printRates(rateDictList, confusionMatrix)
+        print("confusionMatrix : ", confusionMatrix)
+        valueDictList = self.calculateMatrixValues(confusionMatrix)
+        self.printMatrixValues(valueDictList, confusionMatrix)
 
-    def tpRate(self, matrix, label):
+    def calculateTp(self, matrix, label):
         return matrix[label][label]
 
-    def tnRate(self, matrix, label):
+    def calculateTn(self, matrix, label):
         ans = 0
         for i in range(len(matrix)):
             for j in range(len(matrix[0])):
@@ -303,42 +297,49 @@ class Graph:
                     ans += matrix[i][j]
         return ans
 
-    def fpRate(self, matrix, label):
+    def calculateFp(self, matrix, label):
         ans = 0
         for i in range(len(matrix[label])):
             if i!=label:
                 ans += matrix[label][i]
         return ans
 
-    def fnRate(self, matrix, label):
+    def calculateFn(self, matrix, label):
         ans = 0
         for i in range(len(matrix)):
             if i!=label:
                 ans += matrix[i][label]
         return ans
 
-    def calculateRates(self, matrix):
-        rateDictList = []
+    def calculateMatrixValues(self, matrix):
+        valueDictList = []
         for i in range(len(matrix)):
-            rateDict = {}
-            rateDict['label'] = i
-            rateDict['tp'] = self.tpRate(matrix, i)
-            rateDict['tn'] = self.tnRate(matrix, i)
-            rateDict['fp'] = self.fpRate(matrix, i)
-            rateDict['fn'] = self.fnRate(matrix, i)
-            rateDictList.append(rateDict)
-        return rateDictList
+            valueDict = {}
+            valueDict['label'] = i
+            valueDict['tp'] = self.calculateTp(matrix, i)
+            valueDict['tn'] = self.calculateTn(matrix, i)
+            valueDict['fp'] = self.calculateFp(matrix, i)
+            valueDict['fn'] = self.calculateFn(matrix, i)
+            valueDictList.append(valueDict)
+        return valueDictList
     
-    def printRates(self, rateDictList, matrix):
-        for rateDict in rateDictList:
-            sum_all = sum(matrix[rateDict['label']])
+    def printMatrixValues(self, valueDictList, matrix):
+        for valueDict in valueDictList:
+            sum_all = sum( [ sum(x) for x in matrix ] )
             accuracy = 0.0
             error_rate = 0.0
+            precision = 0.0
+            tpRate = 0.0
             if sum_all!=0:
-                accuracy = (rateDict['tp'] + rateDict['tn']) / sum_all
-                error_rate = (rateDict['fp'] + rateDict['fn']) / sum_all            
-            print("sum_all:",sum_all, end=" ")
-            print("Label:",rateDict['label'],", tpRate:",rateDict['tp'], ", tnRate:",rateDict['tn'], ", fpRate:",rateDict['fp'], ", fnRate:",rateDict['fn'], ", Accuracy:",accuracy,", errorRate:",error_rate)
+                accuracy = (valueDict['tp'] + valueDict['tn']) / sum_all
+                error_rate = (valueDict['fp'] + valueDict['fn']) / sum_all       
+            if valueDict['tp'] + valueDict['fp'] != 0:
+                precision = valueDict['tp'] / (valueDict['tp'] + valueDict['fp'])
+            if valueDict['tp'] + valueDict['fn'] != 0:
+                tpRate = valueDict['tp'] / (valueDict['tp'] + valueDict['fn'])
+            print("sum_all:",sum_all,',', end=" ")
+            print("Label:",valueDict['label'],", tp:",valueDict['tp'], ", tn:",valueDict['tn'], ", fp:",valueDict['fp'], ", fn:",valueDict['fn'], end="")
+            print(", Accuracy:",accuracy,", errorRate:",error_rate,", Precision:",precision,", tpRate:",tpRate) 
 
     def adaptiveLearning(self, t : int, n0 : float):
         alpha = 0.01
