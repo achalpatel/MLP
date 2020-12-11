@@ -41,15 +41,15 @@ g.readDf(df)
 g.validationDf = validationDf
 # Print Initial Weights
 print("Initial Weights:")
-g.printEdgeWeights()
+# g.printEdgeWeights()
 
 # Train MLP
-epochs = 15
+epochs = 5
 g.runANN(epochs)
 
 # print Finial weights
 print("Final Weights : ")
-g.printEdgeWeights()
+# g.printEdgeWeights()
 
 # Run prediction on Training set
 print("Train Set Prediction-------------------------------------")

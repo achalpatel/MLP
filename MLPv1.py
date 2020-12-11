@@ -261,6 +261,7 @@ class Graph:
         rightAnswerCount = 0
         outputIndexList = [0] * 8
         targetIndexList = [0] * 8
+        confusionMatrix = [ [0] * 8 for i in range(8) ]         
         for i in range(dataframe.shape[0]):
             self.inputLayerFeed(dataframe.iloc[i])
             for layer in self.hiddenLayerList:
@@ -274,7 +275,8 @@ class Graph:
             outputList = [node.value for node in self.outputLayer.nodes]
             outputIndex = outputList.index(max(outputList))
             targetIndex = self.targetList.index(max(self.targetList))
-
+            # print(outputIndex, targetIndex)
+            confusionMatrix[outputIndex][targetIndex] += 1
             # print("------------------------------------------------------")
             # print("outputList",outputList)
             # print("self.targetList",self.targetList)
@@ -284,9 +286,11 @@ class Graph:
             targetIndexList[targetIndex] += 1
             if outputIndex == targetIndex:
                 rightAnswerCount+=1
+        print("confusionMatrix : ", confusionMatrix)
         print("targetIndexList : ",targetIndexList)
         print("outputIndexList : ",outputIndexList)
         print("rightAnswerCount : ",rightAnswerCount, "/Out of : ",dataframe.shape[0])
+        
 
     def adaptiveLearning(self, t : int, n0 : float):
         alpha = 0.01
@@ -302,5 +306,7 @@ class Graph:
             self.adaptiveLearning(k+1, n0)
 
     def printEdgeWeights(self):
-        for edge in self.edgeList:
-            print(edge.weight)
+        index = 1
+        for edge in self.edgeList:        
+            print("Edge[",index,"] = ", edge.weight)
+            index+=1
