@@ -19,12 +19,14 @@ def createDataFrame(dataset : list):
 
 
 dataset = read_file("dataset.txt")
+validation_set = read_file("validation_set.txt")
 df = createDataFrame(dataset)
+validationDf = createDataFrame(validation_set)
 numberOfInputNodes = 10
 numberOfHiddenNodes = 10
 numberOfOutputNodes = 8
 numberOfHiddenLayers = 1
-learningRate = 0.005
+learningRate = 0.01
 g = Graph(learningRate)
 g.createHiddenLayers(numberOfHiddenLayers)
 g.createNodes(numberOfInputNodes, numberOfHiddenNodes, numberOfOutputNodes)
@@ -36,7 +38,8 @@ print("Hidden Nodes : ", len(g.hiddenLayerList[0].nodes))
 g.connectGraph()
 g.calculateInitialWeights()
 g.readDf(df)
-epochs = 40
+g.validationDf = validationDf
+epochs = 20
 g.runANN(epochs)
 # Run prediction on Training set
 print("Train Set Prediction-------------------------------------")
@@ -45,3 +48,7 @@ g.dfTest(g.trainDf)
 # Run Prediction on Testing set
 print("Test Set Prediction-------------------------------------")
 g.dfTest(g.testDf)
+
+# Run Prediction on Validation set
+print("Validation Set Prediction-------------------------------------")
+g.dfTest(g.validationDf)

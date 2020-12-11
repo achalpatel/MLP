@@ -76,6 +76,7 @@ class Graph:
         self.df = None
         self.trainDf = None
         self.testDf = None
+        self.validationDf = None
         self.maxAttribList = []
         self.minAttribList = []
         self.targetList = []
