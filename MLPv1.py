@@ -253,8 +253,7 @@ class Graph:
         self.deltaForOutputLayer()
         self.deltaForHiddenLayer()
         self.updateInputToHiddenWeights()
-        self.updateHiddenToOutputWeights()
-        
+        self.updateHiddenToOutputWeights()        
         return mseVal
         
     def dfTest(self, dataframe):
@@ -290,7 +289,56 @@ class Graph:
         print("targetIndexList : ",targetIndexList)
         print("outputIndexList : ",outputIndexList)
         print("rightAnswerCount : ",rightAnswerCount, "/Out of : ",dataframe.shape[0])
-        
+        rateDictList = self.calculateRates(confusionMatrix)
+        self.printRates(rateDictList, confusionMatrix)
+
+    def tpRate(self, matrix, label):
+        return matrix[label][label]
+
+    def tnRate(self, matrix, label):
+        ans = 0
+        for i in range(len(matrix)):
+            for j in range(len(matrix[0])):
+                if i!=label and j!=label:
+                    ans += matrix[i][j]
+        return ans
+
+    def fpRate(self, matrix, label):
+        ans = 0
+        for i in range(len(matrix[label])):
+            if i!=label:
+                ans += matrix[label][i]
+        return ans
+
+    def fnRate(self, matrix, label):
+        ans = 0
+        for i in range(len(matrix)):
+            if i!=label:
+                ans += matrix[i][label]
+        return ans
+
+    def calculateRates(self, matrix):
+        rateDictList = []
+        for i in range(len(matrix)):
+            rateDict = {}
+            rateDict['label'] = i
+            rateDict['tp'] = self.tpRate(matrix, i)
+            rateDict['tn'] = self.tnRate(matrix, i)
+            rateDict['fp'] = self.fpRate(matrix, i)
+            rateDict['fn'] = self.fnRate(matrix, i)
+            rateDictList.append(rateDict)
+        return rateDictList
+    
+    def printRates(self, rateDictList, matrix):
+        for rateDict in rateDictList:
+            sum_all = sum(matrix[rateDict['label']])
+            accuracy = 0.0
+            error_rate = 0.0
+            if sum_all!=0:
+                accuracy = (rateDict['tp'] + rateDict['tn']) / sum_all
+                error_rate = (rateDict['fp'] + rateDict['fn']) / sum_all            
+            print("sum_all:",sum_all, end=" ")
+            print("Label:",rateDict['label'],", tpRate:",rateDict['tp'], ", tnRate:",rateDict['tn'], ", fpRate:",rateDict['fp'], ", fnRate:",rateDict['fn'], ", Accuracy:",accuracy,", errorRate:",error_rate)
 
     def adaptiveLearning(self, t : int, n0 : float):
         alpha = 0.01
