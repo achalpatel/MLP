@@ -252,8 +252,9 @@ class Graph:
         mseVal = self.mse()
         self.deltaForOutputLayer()
         self.deltaForHiddenLayer()
-        self.updateHiddenToOutputWeights()
         self.updateInputToHiddenWeights()
+        self.updateHiddenToOutputWeights()
+        
         return mseVal
         
     def dfTest(self, dataframe):
@@ -299,3 +300,7 @@ class Graph:
                 mseSum += self.singlePass(i)
             print("Epoch[",k,"] MSE:",mseSum,", LRate : ",self.learningRate)
             self.adaptiveLearning(k+1, n0)
+
+    def printEdgeWeights(self):
+        for edge in self.edgeList:
+            print(edge.weight)

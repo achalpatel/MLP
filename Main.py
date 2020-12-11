@@ -23,7 +23,7 @@ validation_set = read_file("validation_set.txt")
 df = createDataFrame(dataset)
 validationDf = createDataFrame(validation_set)
 numberOfInputNodes = 10
-numberOfHiddenNodes = 10
+numberOfHiddenNodes = 12
 numberOfOutputNodes = 8
 numberOfHiddenLayers = 1
 learningRate = 0.01
@@ -39,8 +39,18 @@ g.connectGraph()
 g.calculateInitialWeights()
 g.readDf(df)
 g.validationDf = validationDf
-epochs = 20
+# Print Initial Weights
+print("Initial Weights:")
+g.printEdgeWeights()
+
+# Train MLP
+epochs = 15
 g.runANN(epochs)
+
+# print Finial weights
+print("Final Weights : ")
+g.printEdgeWeights()
+
 # Run prediction on Training set
 print("Train Set Prediction-------------------------------------")
 g.dfTest(g.trainDf)
