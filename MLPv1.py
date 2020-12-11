@@ -279,7 +279,8 @@ class Graph:
         print("targetIndexList : ",targetIndexList)
         print("outputIndexList : ",outputIndexList)
         print("rightAnswerCount : ",rightAnswerCount, "/Out of : ",dataframe.shape[0])
-        print("confusionMatrix : ", confusionMatrix)
+        print("confusionMatrix : ")
+        print(np.array(confusionMatrix))
         valueDictList = self.calculateMatrixValues(confusionMatrix)
         self.printMatrixValues(valueDictList, confusionMatrix)
 
@@ -334,7 +335,6 @@ class Graph:
                 precision = valueDict['tp'] / (valueDict['tp'] + valueDict['fp'])
             if valueDict['tp'] + valueDict['fn'] != 0:
                 tpRate = valueDict['tp'] / (valueDict['tp'] + valueDict['fn'])
-            print("sum_all:",sum_all,',', end=" ")
             print("Label:",valueDict['label'],", tp:",valueDict['tp'], ", tn:",valueDict['tn'], ", fp:",valueDict['fp'], ", fn:",valueDict['fn'], end="")
             print(", Accuracy:",accuracy,", errorRate:",error_rate,", Precision:",precision,", tpRate:",tpRate) 
 
