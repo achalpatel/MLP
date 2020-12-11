@@ -225,17 +225,10 @@ class Graph:
             deltaVal = node.value * (1-node.value) * sumVal
             node.delta = deltaVal
 
-    def updateHiddenToOutputWeights(self):
-        m = len(self.hiddenLayerList[0].nodes)
+    def updateWeights(self, nodeList):
+        m = len(nodeList)
         for i in range(m):
-            node = self.hiddenLayerList[0].nodes[i]
-            for edge in node.outEdgeList:
-                edge.weight += self.learningRate * edge.toNode.delta * node.value
-    
-    def updateInputToHiddenWeights(self):
-        m = len(self.inputLayer.nodes)
-        for i in range(m):
-            node = self.inputLayer.nodes[i]
+            node = nodeList[i]
             for edge in node.outEdgeList:
                 edge.weight += self.learningRate * edge.toNode.delta * node.value
     
@@ -252,8 +245,8 @@ class Graph:
         mseVal = self.mse()
         self.deltaForOutputLayer()
         self.deltaForHiddenLayer()
-        self.updateInputToHiddenWeights()
-        self.updateHiddenToOutputWeights()        
+        self.updateWeights(self.inputLayer.nodes)
+        self.updateWeights(self.hiddenLayerList[0].nodes)
         return mseVal
         
     def dfTest(self, dataframe):

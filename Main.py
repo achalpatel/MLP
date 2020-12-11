@@ -23,10 +23,10 @@ validation_set = read_file("validation_set.txt")
 df = createDataFrame(dataset)
 validationDf = createDataFrame(validation_set)
 numberOfInputNodes = 10
-numberOfHiddenNodes = 12
+numberOfHiddenNodes = 10
 numberOfOutputNodes = 8
 numberOfHiddenLayers = 1
-learningRate = 0.01
+learningRate = 0.1
 g = Graph(learningRate)
 g.createHiddenLayers(numberOfHiddenLayers)
 g.createNodes(numberOfInputNodes, numberOfHiddenNodes, numberOfOutputNodes)
